@@ -51,6 +51,8 @@ bool solveSudoku(vector<vector<int> > &board) { // Board includes sudoku puzzle 
     for(int n = 1; n <= 9; ++n) { // Loop through possible numbers
         if(!numberInColumn(board, check.second, n) && !numberInRow(board, check.first, n) && !numberInBox(board, (check.first - check.first % 3), (check.second - check.second % 3), n)) {
             board[check.first][check.second] = n;
+            pair<int, int> end = findUnassignedSlots(board);
+            if(end.first == -1 && end.second == -1) return true; // Sudoku is solved
             if(solveSudoku(board)) return true;
             board[check.first][check.second] = 0;
         }
@@ -62,7 +64,7 @@ int main() {
     cin >> boardSize;
     if(boardSize % 3 != 0) {
         cout << "Board size must be a multiple of three" << endl;
-        cin >> boardSize;
+       return 0;
     }
     vector<vector<int> > board;
     for(int i = 0; i < boardSize; ++i) {
@@ -75,12 +77,14 @@ int main() {
         board.push_back(temp);
     }
     if(solveSudoku(board)) {
-        cout << "Inside if statement" << endl;
+        cout << "Solved: " << endl;
         for(int i = 0; i < board.size(); ++i) {
             for(int j = 0; j < board[0].size(); ++j) {
                 cout << board[i][j] << " ";
             }
             cout << endl;
         }
+    } else {
+        cout << "Cannot be solved" << endl;
     }
 }
