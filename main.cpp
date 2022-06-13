@@ -6,7 +6,8 @@ using std::cout;
 using std::cin;
 using std::endl;
 using std::pair;
-
+// g++ lib_sudosolver.cc main.cpp -o sudoSolver (compile command)
+// ./sudoSolver (exec command)
 int main() {
     int boardSize; // must be a multiple of 3
     cin >> boardSize;
@@ -24,7 +25,7 @@ int main() {
         }
         board.push_back(temp);
     }
-    if(sudoSolve::solveSudoku(boardSize, board)) {
+    if(sudoSolver::solveSudoku(boardSize, board)) {
         cout << "Solved: " << endl;
         for(int i = 0; i < board.size(); ++i) {
             for(int j = 0; j < board[0].size(); ++j) {
