@@ -6,6 +6,8 @@ using std::cout;
 using std::cin;
 using std::endl;
 using std::pair;
+// Compiling commands:
+// cd src
 // g++ lib_sudosolver.cc main.cpp -o sudoSolver (compile command)
 // ./sudoSolver (exec command)
 int main() {
