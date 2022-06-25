@@ -7,14 +7,14 @@ using std::cin;
 using std::endl;
 using std::pair;
 
-bool sudoSolver::numberInColumn(int boardSize, vector<vector<int> > board, int c, int n) { // checks if a number is in the column
+bool sudoSolver::numberInColumn(const int boardSize, vector<vector<int> > board, int c, int n) { // checks if a number is in the column
     for(int r = 0; r < boardSize; ++r) {
         if(board[r][c] == n) return true;
     }
     return false;
 }
 
-bool sudoSolver::numberInRow(int boardSize, vector<vector<int> > board, int r, int n) { // checks if a number is in the row
+bool sudoSolver::numberInRow(const int boardSize, vector<vector<int> > board, int r, int n) { // checks if a number is in the row
     for(int c = 0; c < boardSize; ++c) {
         if(board[r][c] == n) return true;
     }
@@ -44,7 +44,7 @@ pair<int, int> sudoSolver::findUnassignedSlots(vector<vector<int> > board) { // 
     return tmp;
 }
 
-bool sudoSolver::solveSudoku(int boardSize, vector<vector<int> > &board) { // Board includes sudoku puzzle with 0's in place of empty spots
+bool sudoSolver::solveSudoku(const int boardSize, vector<vector<int> > &board) { // Board includes sudoku puzzle with 0's in place of empty spots
     pair<int, int> check = findUnassignedSlots(board);
     if(check.first == -1 && check.second == -1) return false; // Sudoku is filled
     for(int n = 1; n <= 9; ++n) { // Loop through possible numbers
