@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <random>
+#include <chrono>
 #include "sudosolver.h"
 using std::vector;
 using std::cout;
@@ -22,8 +23,16 @@ int main() {
        return 0;
     }
     vector<vector<int> > board(boardSize, vector<int>(boardSize, 0));
-    cout << solvable(board, boardSize) << endl;
-    while(!solvable(board, boardSize)) {
+    while(true) {
+        int numSolutions = sudoSolver::isOneSolution(boardSize, board);
+        if(numSolutions == 1) {
+            cout << "Generation completed successfully" << endl;
+            break;
+        }
+        if(numSolutions < 1) {
+            cout << "Generation failed" << endl;
+            return 0;
+        }
         std::random_device ranDevice; // generates the random numbers to constantly make a different sudoku
         std::mt19937 gen(ranDevice());
         std::uniform_int_distribution<int> boardDist(0, boardSize - 1);
