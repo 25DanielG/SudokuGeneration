@@ -84,7 +84,10 @@ int sudoSolver::isOneSolution(const int boardSize, vector<vector<int> > &board) 
         if(!numberInColumn(boardSize, board, check.second, n) && !numberInRow(boardSize, board, check.first, n) && !numberInBox(board, (check.first - check.first % 3), (check.second - check.second % 3), n)) {
             board[check.first][check.second] = n;
             pair<int, int> end = findUnassignedSlots(board);
-            if((end.first == -1 && end.second == -1) || (solveSudoku(boardSize, board))) ++solutionCount; // Found a sudoku solution
+            if((end.first == -1 && end.second == -1) || (solveSudoku(boardSize, board))) {
+                ++solutionCount; // Found a sudoku solution
+                if(solutionCount >= 2) break;
+            }
             board[check.first][check.second] = 0;
         }
     }

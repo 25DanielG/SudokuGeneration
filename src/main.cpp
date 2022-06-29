@@ -8,20 +8,17 @@ using std::cout;
 using std::cin;
 using std::endl;
 using std::pair;
+
 // Compiling commands:
 // cd src
 // g++ lib_sudosolver.cc main.cpp -o sudoSolver (compile command)
 // ./sudoSolver (exec command)
+
+int boardSize = 9; // typical size for sudoku
 bool solvable(vector<vector<int> > &board, const int boardSize) {
     return (sudoSolver::solveSudoku(boardSize, board));
 }
 int main() {
-    int boardSize; // must be a multiple of 3
-    cin >> boardSize;
-    if(boardSize % 3 != 0) {
-        cout << "Board size must be a multiple of three" << endl;
-       return 0;
-    }
     vector<vector<int> > board(boardSize, vector<int>(boardSize, 0));
     while(true) {
         int numSolutions = sudoSolver::isOneSolution(boardSize, board);
