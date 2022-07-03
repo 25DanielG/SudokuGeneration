@@ -32,7 +32,7 @@ bool sudoSolver::numberInBox(vector<vector<int> > board, int startR, int startC,
     return false;
 }
 
-pair<int, int> sudoSolver::findUnassignedSlots(vector<vector<int> > board) { // finds empty slots on the board
+pair<int, int> sudoSolver::findUnassignedSlots(vector<vector<int> > &board) { // finds empty slots on the board
     pair<int, int> tmp;
     for(int r = 0; r < board.size(); ++r) {
         for(int c = 0; c < board.size(); ++c) {
@@ -56,43 +56,50 @@ bool sudoSolver::solveSudoku(const int boardSize, vector<vector<int> > &board) {
             pair<int, int> end = findUnassignedSlots(board);
             if(end.first == -1 && end.second == -1) { // Sudoku is solved
                 auto end = high_resolution_clock::now();
-                auto duration = duration_cast<microseconds>(end - start);
-                cout << "Search for solution: " << duration.count() << " microseconds" << endl;
+                auto duration = duration_cast<milliseconds>(end - start);
+                cout << "Search for solution: " << duration.count() << " milliseconds" << endl;
                 return true;
             }
             if(solveSudoku(boardSize, board)) {
                 auto end = high_resolution_clock::now();
-                auto duration = duration_cast<microseconds>(end - start);
-                cout << "Search for solution: " << duration.count() << " microseconds" << endl;
+                auto duration = duration_cast<milliseconds>(end - start);
+                cout << "Search for solution: " << duration.count() << " millseconds" << endl;
                 return true;
             }
             board[check.first][check.second] = 0;
         }
     }
     auto end = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(end - start);
-    cout << "Search for solution: " << duration.count() << " microseconds" << endl;
+    auto duration = duration_cast<milliseconds>(end - start);
+    cout << "Search for solution: " << duration.count() << " milliseconds" << endl;
     return false;
 }
 
-int sudoSolver::isOneSolution(const int boardSize, vector<vector<int> > &board) { // checks if there is one solution to a sudoku puzzle
+bool sudoSolver::isOneSolution(const int boardSize, vector<vector<int> > board, int &solutionCount) { // checks if there is one solution to a sudoku puzzle
+    if(solutionCount > 1) {
+        cout << "TRYING TO RETURN" << endl;
+        return true; // try to exit since there can be trillions of solutions
+    }
     auto start = high_resolution_clock::now();
-    int solutionCount = 0;
     pair<int, int> check = findUnassignedSlots(board);
-    if(check.first == -1 && check.second == -1) return false; // Sudoku is filled
+    if(check.first == -1 && check.second == -1) return true; // Sudoku is filled
     for(int n = 1; n <= 9; ++n) { // Loop through possible numbers
         if(!numberInColumn(boardSize, board, check.second, n) && !numberInRow(boardSize, board, check.first, n) && !numberInBox(board, (check.first - check.first % 3), (check.second - check.second % 3), n)) {
             board[check.first][check.second] = n;
             pair<int, int> end = findUnassignedSlots(board);
-            if((end.first == -1 && end.second == -1) || (solveSudoku(boardSize, board))) {
+            if(end.first == -1 && end.second == -1) {
                 ++solutionCount; // Found a sudoku solution
-                if(solutionCount >= 2) break;
+                return true;
+            }
+            if(isOneSolution(boardSize, board, solutionCount)) {
+                ++solutionCount; // Found a sudoku solution
+                return true;
             }
             board[check.first][check.second] = 0;
         }
     }
     auto end = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(end - start);
-    cout << "Search for solution: " << duration.count() << " microseconds" << endl;
-    return solutionCount;
+    auto duration = duration_cast<milliseconds>(end - start);
+    cout << "Search for solution: " << duration.count() << " milliseconds ; solutionCount: " << solutionCount << endl;
+    return false;
 }

@@ -20,16 +20,8 @@ bool solvable(vector<vector<int> > &board, const int boardSize) {
 }
 int main() {
     vector<vector<int> > board(boardSize, vector<int>(boardSize, 0));
-    while(true) {
-        int numSolutions = sudoSolver::isOneSolution(boardSize, board);
-        if(numSolutions == 1) {
-            cout << "Generation completed successfully" << endl;
-            break;
-        }
-        if(numSolutions < 1) {
-            cout << "Generation failed" << endl;
-            return 0;
-        }
+    int solutionCount = 0;
+    while(solutionCount != 1) {
         std::random_device ranDevice; // generates the random numbers to constantly make a different sudoku
         std::mt19937 gen(ranDevice());
         std::uniform_int_distribution<int> boardDist(0, boardSize - 1);
@@ -37,10 +29,17 @@ int main() {
         int ranRowIndex = boardDist(gen);
         int ranColIndex = boardDist(gen);
         int insertedNumber = insertDist(gen);
+        cout << "insertedNumber: " << insertedNumber << endl;
         if(!sudoSolver::numberInRow(boardSize, board, ranRowIndex, insertedNumber)
-           && !sudoSolver::numberInColumn(boardSize, board, ranColIndex, insertedNumber)
-           && !sudoSolver::numberInBox(board, (ranRowIndex - ranRowIndex % 3), (ranColIndex - ranColIndex % 3), insertedNumber)) {
+        && !sudoSolver::numberInColumn(boardSize, board, ranColIndex, insertedNumber)
+        && !sudoSolver::numberInBox(board, (ranRowIndex - ranRowIndex % 3), (ranColIndex - ranColIndex % 3), insertedNumber)) {
             board[ranRowIndex][ranColIndex] = insertedNumber;
+        }
+        sudoSolver::isOneSolution(boardSize, board, solutionCount);
+        cout << "solutionCount: " << solutionCount << endl;
+        if(solutionCount < 1) {
+            cout << "Generation failed" << endl;
+            return 0;
         }
     }
     for(int i = 0; i < boardSize; ++i) {
