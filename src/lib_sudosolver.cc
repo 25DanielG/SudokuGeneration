@@ -34,6 +34,10 @@ bool sudoSolver::numberInBox(vector<vector<int> > board, int startR, int startC,
     return false;
 }
 
+bool sudoSolver::isLegalPlacement(int row, int col, int value, int boardSize, vector<vector<int> > board) { // check if you can put a number
+    return (!numberInColumn(boardSize, board, col, value) && !numberInRow(boardSize, board, row, value) && !numberInBox(board, (row - row % 3), (col - col % 3), value));
+}
+
 pair<int, int> sudoSolver::findUnassignedSlots(vector<vector<int> > &board) { // finds empty slots on the board
     pair<int, int> tmp;
     for(int r = 0; r < board.size(); ++r) {
@@ -48,49 +52,53 @@ pair<int, int> sudoSolver::findUnassignedSlots(vector<vector<int> > &board) { //
     return tmp;
 }
 
+int sudoSolver::countUnassignedSlots(vector<vector<int> > board) { // counts number of empty slots on the board
+    int cnt = 0;
+    for(int r = 0; r < board.size(); ++r) {
+        for(int c = 0; c < board.size(); ++c) {
+            if(board[r][c] == 0) {
+                ++cnt;
+            }
+        }
+    }
+    return cnt;
+}
+
 bool sudoSolver::solveSudoku(const int boardSize, vector<vector<int> > &board, vector<int> allowedNums) { // Board includes sudoku puzzle with 0's in place of empty spots
-    auto start = high_resolution_clock::now();
     std::random_shuffle(allowedNums.begin(), allowedNums.end());
     pair<int, int> check = findUnassignedSlots(board);
     if(check.first == -1 && check.second == -1) return true; // Sudoku is filled
     for(auto n : allowedNums) { // Loop through possible numbers
-        if(!numberInColumn(boardSize, board, check.second, n) && !numberInRow(boardSize, board, check.first, n) && !numberInBox(board, (check.first - check.first % 3), (check.second - check.second % 3), n)) {
+        if(isLegalPlacement(check.first, check.second, n, boardSize, board)) {
             board[check.first][check.second] = n;
             pair<int, int> end = findUnassignedSlots(board);
             if(solveSudoku(boardSize, board, allowedNums)) {
                 auto end = high_resolution_clock::now();
-                auto duration = duration_cast<milliseconds>(end - start);
                 return true;
             }
             board[check.first][check.second] = 0;
         }
     }
-    auto end = high_resolution_clock::now();
-    auto duration = duration_cast<milliseconds>(end - start);
-    //cout << "Search for solution: " << duration.count() << " milliseconds" << endl;
     return false;
 }
 
-bool sudoSolver::isOneSolution(const int boardSize, vector<vector<int> > board, int &solutionCount) { // checks if there is one solution to a sudoku puzzle
-    if(solutionCount > 1) {
-        return true; // try to exit since there can be trillions of solutions
+int sudoSolver::isOneSolution(int row, int col, vector<vector<int> > board, int count, int boardSize) {
+    if(row == 9) {
+        row = 0;
+        if (++col == boardSize)
+            return count + 1;
     }
-    auto start = high_resolution_clock::now();
-    pair<int, int> check = findUnassignedSlots(board);
-    if(check.first == -1 && check.second == -1)
-        return true; // Sudoku is filled
-    for(int n = 1; n <= 9; ++n) { // Loop through possible numbers
-        if(!numberInColumn(boardSize, board, check.second, n) && !numberInRow(boardSize, board, check.first, n) && !numberInBox(board, (check.first - check.first % 3), (check.second - check.second % 3), n)) {
-            board[check.first][check.second] = n;
-            if(isOneSolution(boardSize, board, solutionCount)) {
-                ++solutionCount; // Found a sudoku solution
-                return true;
-            }
-            board[check.first][check.second] = 0;
+    if(board[row][col] != 0)  // skip filled cells
+        return isOneSolution(row + 1, col, board, count, boardSize);
+    // search for 2 solutions instead of 1
+    // break, if 2 solutions are found
+    for(int val = 1; val <= boardSize && count < 2; ++val) {
+        if(isLegalPlacement(row, col, val, boardSize, board)) {
+            board[row][col] = val;
+            // add additional solutions
+            count = isOneSolution(row + 1, col, board, count, boardSize);
         }
     }
-    auto end = high_resolution_clock::now();
-    auto duration = duration_cast<milliseconds>(end - start);
-    cout << "Search for solution: " << duration.count() << " milliseconds ; solutionCount: " << solutionCount << endl;
-    return false;
+    board[row][col] = 0; // reset on backtrack
+    return count;
 }
