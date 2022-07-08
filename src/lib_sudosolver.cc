@@ -65,7 +65,9 @@ int sudoSolver::countUnassignedSlots(vector<vector<int> > board) { // counts num
 }
 
 bool sudoSolver::solveSudoku(const int boardSize, vector<vector<int> > &board, vector<int> allowedNums) { // Board includes sudoku puzzle with 0's in place of empty spots
-    std::random_shuffle(allowedNums.begin(), allowedNums.end());
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::shuffle(std::begin(allowedNums), std::end(allowedNums), std::default_random_engine(seed));
+    cout << endl;
     pair<int, int> check = findUnassignedSlots(board);
     if(check.first == -1 && check.second == -1) return true; // Sudoku is filled
     for(auto n : allowedNums) { // Loop through possible numbers

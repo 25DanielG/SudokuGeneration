@@ -11,13 +11,13 @@ using std::pair;
 using namespace std::chrono;
 
 const int boardSize = 9; // typical size for sudoku
-vector<vector<int> > bestBoard;
+vector<vector<int> > bestBoard(boardSize, vector<int>(boardSize, 0));
 
 void generateSudoku(const int boardSize, int solutionCount, vector<vector<int> > &board, int &maxRemovedElements) {
-    if(maxRemovedElements >= 51) return;
+    if(maxRemovedElements >= 5) return;
     for(int i = 0; i < boardSize; ++i) {
         for(int j = 0; j < boardSize; ++j) {
-            std::random_device ranDevice; // generates the random numbers to constantly make a different sudoku
+            std::random_device ranDevice; // generates the random numbers to constantly make a different sudok
             std::mt19937 gen2(ranDevice());
             std::uniform_int_distribution<int> boardDist(0, boardSize - 1);
             int ranRowIndex = boardDist(gen2);
@@ -43,13 +43,18 @@ void generateSudoku(const int boardSize, int solutionCount, vector<vector<int> >
         }
     }
 }
+void vectorShuffle(vector<int> &arr, int indexOne, int indexTwo) {
+    int tmp = arr[indexOne];
+    arr[indexOne] = arr[indexTwo];
+    arr[indexTwo] = tmp;
+}
 int main() {
     vector<vector<int> > board(boardSize, vector<int>(boardSize, 0));
-    vector<int> allowedNums(boardSize);
-    for(int i = 1; i <= boardSize; ++i) {
-        allowedNums.push_back(i);
+    vector<int> allowedNums(boardSize, 0);
+    for(int i = 0; i < boardSize; ++i) {
+        allowedNums[i] = i + 1;
     }
-    int solutionCount = 0, numUnassigned = 0;
+    int solutionCount = 0, numUnassigned = INT16_MIN;
     auto start = high_resolution_clock::now();
     sudoSolver::solveSudoku(boardSize, board, allowedNums);
     auto end = high_resolution_clock::now();
