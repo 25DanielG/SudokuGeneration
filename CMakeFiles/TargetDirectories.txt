@@ -1,0 +1,6 @@
+/Users/danielgergov/Documents/C++/SudokuGeneration/CMakeFiles/sudokuGeneration.dir
+/Users/danielgergov/Documents/C++/SudokuGeneration/CMakeFiles/edit_cache.dir
+/Users/danielgergov/Documents/C++/SudokuGeneration/CMakeFiles/rebuild_cache.dir
+/Users/danielgergov/Documents/C++/SudokuGeneration/src/CMakeFiles/sudoSolve.dir
+/Users/danielgergov/Documents/C++/SudokuGeneration/src/CMakeFiles/edit_cache.dir
+/Users/danielgergov/Documents/C++/SudokuGeneration/src/CMakeFiles/rebuild_cache.dir

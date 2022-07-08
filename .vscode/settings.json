@@ -82,5 +82,6 @@
         "string_view": "cpp",
         "variant": "cpp",
         "__functional_base": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "${workspaceFolder}/src"
 }
