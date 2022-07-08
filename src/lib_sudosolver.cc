@@ -67,7 +67,7 @@ bool sudoSolver::solveSudoku(const int boardSize, vector<vector<int> > &board, v
     }
     auto end = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(end - start);
-    cout << "Search for solution: " << duration.count() << " milliseconds" << endl;
+    //cout << "Search for solution: " << duration.count() << " milliseconds" << endl;
     return false;
 }
 
