@@ -15,32 +15,31 @@ const int8_t DIFFICULTY = 10; // defines the difficulty (the number of slots lef
 vector<vector<int> > bestBoard(boardSize, vector<int>(boardSize, 0));
 
 void generateSudoku(const int boardSize, int solutionCount, vector<vector<int> > &board, int &maxRemovedElements) {
-    if(maxRemovedElements >= DIFFICULTY) return;
+    if(maxRemovedElements >= DIFFICULTY) return; // Returns if number of empty slots matches DIFFICULTY
     for(int i = 0; i < boardSize; ++i) {
         for(int j = 0; j < boardSize; ++j) {
-            std::random_device ranDevice; // generates the random numbers to constantly make a different sudok
+            std::random_device ranDevice; // Generates the random numbers to constantly make a different sudok
             std::mt19937 gen2(ranDevice());
             std::uniform_int_distribution<int> boardDist(0, boardSize - 1);
             int ranRowIndex = boardDist(gen2);
             int ranColIndex = boardDist(gen2);
             int tmp = board[ranRowIndex][ranColIndex];
-            board[ranRowIndex][ranColIndex] = 0;
+            board[ranRowIndex][ranColIndex] = 0; // Tests removing a number
             auto start = high_resolution_clock::now();
-            int tmpSolutions = sudoSolver::isOneSolution(i, j, board, 0, boardSize);
+            int tmpSolutions = sudoSolver::isOneSolution(i, j, board, 0, boardSize); // Checks if there is one solution still
             auto end = high_resolution_clock::now();
             auto duration = duration_cast<milliseconds>(end - start);
             cout << "Search for solution: " << duration.count() << " milliseconds" << endl;
-            if(tmpSolutions == 1) {
+            if(tmpSolutions == 1) { // If there is one solution: reset solutionCount, store the board, call the generation function
                 solutionCount = 0;
                 int numUnfilled = sudoSolver::countUnassignedSlots(board);
                 if(numUnfilled > maxRemovedElements) {
                     maxRemovedElements = numUnfilled;
                     bestBoard = board;
-                    cout << "Number of zeros: " << numUnfilled << endl;
                 }
                 generateSudoku(boardSize, solutionCount, board, maxRemovedElements);
             }
-            board[ranRowIndex][ranColIndex] = tmp;
+            board[ranRowIndex][ranColIndex] = tmp; // Resets the slot if the number of solutions is not one
         }
     }
 }

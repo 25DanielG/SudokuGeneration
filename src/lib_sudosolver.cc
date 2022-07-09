@@ -74,7 +74,7 @@ bool sudoSolver::solveSudoku(const int boardSize, vector<vector<int> > &board, v
         if(isLegalPlacement(check.first, check.second, n, boardSize, board)) {
             board[check.first][check.second] = n;
             pair<int, int> end = findUnassignedSlots(board);
-            if(solveSudoku(boardSize, board, allowedNums)) {
+            if(solveSudoku(boardSize, board, allowedNums)) { // Backtracking here
                 auto end = high_resolution_clock::now();
                 return true;
             }
