@@ -90,17 +90,14 @@ int sudoSolver::isOneSolution(int row, int col, vector<vector<int> > board, int 
         if (++col == boardSize)
             return count + 1;
     }
-    if(board[row][col] != 0)  // skip filled cells
+    if(board[row][col] != 0)
         return isOneSolution(row + 1, col, board, count, boardSize);
-    // search for 2 solutions instead of 1
-    // break, if 2 solutions are found
     for(int val = 1; val <= boardSize && count < 2; ++val) {
         if(isLegalPlacement(row, col, val, boardSize, board)) {
             board[row][col] = val;
-            // add additional solutions
             count = isOneSolution(row + 1, col, board, count, boardSize);
         }
     }
-    board[row][col] = 0; // reset on backtrack
+    board[row][col] = 0;
     return count;
 }
