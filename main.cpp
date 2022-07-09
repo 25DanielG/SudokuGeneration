@@ -11,11 +11,11 @@ using std::pair;
 using namespace std::chrono;
 
 const int boardSize = 9; // typical size for sudoku
+const int8_t DIFFICULTY = 10; // defines the difficulty (the number of slots left unfilled)
 vector<vector<int> > bestBoard(boardSize, vector<int>(boardSize, 0));
 
 void generateSudoku(const int boardSize, int solutionCount, vector<vector<int> > &board, int &maxRemovedElements) {
-    cout << "MaxRemovedElements: " << maxRemovedElements << endl;
-    if(maxRemovedElements >= 50) return;
+    if(maxRemovedElements >= DIFFICULTY) return;
     for(int i = 0; i < boardSize; ++i) {
         for(int j = 0; j < boardSize; ++j) {
             std::random_device ranDevice; // generates the random numbers to constantly make a different sudok
@@ -44,36 +44,35 @@ void generateSudoku(const int boardSize, int solutionCount, vector<vector<int> >
         }
     }
 }
-void vectorShuffle(vector<int> &arr, int indexOne, int indexTwo) {
-    int tmp = arr[indexOne];
-    arr[indexOne] = arr[indexTwo];
-    arr[indexTwo] = tmp;
-}
 int main() {
     vector<vector<int> > board(boardSize, vector<int>(boardSize, 0));
     vector<int> allowedNums(boardSize, 0);
+    // Defines the allowed numbers in the sudoku and further shuffles the vector later to randomize the puzzle
     for(int i = 0; i < boardSize; ++i) {
         allowedNums[i] = i + 1;
     }
     int solutionCount = 0, numUnassigned = INT16_MIN;
     auto start = high_resolution_clock::now();
+    // Initially puts a random solution to an empty sudoku
     sudoSolver::solveSudoku(boardSize, board, allowedNums);
     auto end = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(end - start);
     cout << "Search for solution: " << duration.count() << " milliseconds" << endl;
+    // Generates the board
     generateSudoku(boardSize, solutionCount, board, numUnassigned);
-    cout << endl << "Printed sudoku" << endl << "-----------------" << endl;
+    // Prints the sudoku board in a formatted manner
+    cout << endl << "       Printed Sudoku" << endl;
     for(int i = 0; i < boardSize; ++i) {
         if(i % 3 == 0) {
-            cout << " ____________________________" << endl;
+            cout << "  ------------------------- " << endl;
         }
         for(int j = 0; j < boardSize; ++j) {
             if(j % 3 == 0) {
-                cout << " | ";
+                cout << "|| ";
             }
             cout << bestBoard[i][j] << " ";
         }
-        cout << " | " << endl;
+        cout << "|| " << endl;
     }
-    cout << " ____________________________ " << endl;
+    cout << "  ------------------------- " << endl;
 }
