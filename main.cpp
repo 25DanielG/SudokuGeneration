@@ -14,7 +14,8 @@ const int boardSize = 9; // typical size for sudoku
 vector<vector<int> > bestBoard(boardSize, vector<int>(boardSize, 0));
 
 void generateSudoku(const int boardSize, int solutionCount, vector<vector<int> > &board, int &maxRemovedElements) {
-    if(maxRemovedElements >= 5) return;
+    cout << "MaxRemovedElements: " << maxRemovedElements << endl;
+    if(maxRemovedElements >= 50) return;
     for(int i = 0; i < boardSize; ++i) {
         for(int j = 0; j < boardSize; ++j) {
             std::random_device ranDevice; // generates the random numbers to constantly make a different sudok
@@ -63,9 +64,16 @@ int main() {
     generateSudoku(boardSize, solutionCount, board, numUnassigned);
     cout << endl << "Printed sudoku" << endl << "-----------------" << endl;
     for(int i = 0; i < boardSize; ++i) {
+        if(i % 3 == 0) {
+            cout << " ____________________________" << endl;
+        }
         for(int j = 0; j < boardSize; ++j) {
+            if(j % 3 == 0) {
+                cout << " | ";
+            }
             cout << bestBoard[i][j] << " ";
         }
-        cout << endl;
+        cout << " | " << endl;
     }
+    cout << " ____________________________ " << endl;
 }
