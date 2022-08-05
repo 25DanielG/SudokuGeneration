@@ -1,0 +1,2 @@
+/Library/Developer/CommandLineTools/usr/bin/ar qc libsudoSolve.a CMakeFiles/sudoSolve.dir/lib_sudosolver.cc.o
+/Library/Developer/CommandLineTools/usr/bin/ranlib libsudoSolve.a
