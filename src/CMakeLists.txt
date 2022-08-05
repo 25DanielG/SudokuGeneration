@@ -1,1 +1,0 @@
-add_library(sudoSolve lib_sudosolver.cc)
